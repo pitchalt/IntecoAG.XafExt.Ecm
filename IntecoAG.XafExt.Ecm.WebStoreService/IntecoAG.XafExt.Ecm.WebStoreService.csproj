@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\IntecoAG.XafExt.Ecm.WebStore\IntecoAG.XafExt.Ecm.WebStore.csproj" />
+      <ProjectReference Include="..\IntecoAG.XafExt.Ecm\IntecoAG.XafExt.Ecm.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="DevExpress.Persistent.BaseImpl" Version="19.2.5" />
+    </ItemGroup>
+
+
+</Project>
