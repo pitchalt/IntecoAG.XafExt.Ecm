@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers {
 
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase {
