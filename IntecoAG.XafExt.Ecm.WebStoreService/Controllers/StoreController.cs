@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TestAPI.Models;
+using System.IO;
 
 namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 {
@@ -87,15 +87,9 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             //var path = StoreLogic.GetFullName($"{id}.pdf");
             //if (System.IO.File.Exists(path))
             //{
-            //    using (StreamReader reader = new StreamReader(Request.Body))
-            //    {
-            //        var text = reader.ReadToEnd();
-            //        using (StreamWriter writer = new StreamWriter(path))
-            //        {
-            //            writer.Write(text);
-            //        }
+            //    using(FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open){
+            //        await Request.Body.CopyToAsync(stream);
             //    }
-            //    return Ok();
             //}
             //return new BadRequestResult();
         }
