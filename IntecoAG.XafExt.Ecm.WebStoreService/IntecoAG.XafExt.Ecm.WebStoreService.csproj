@@ -5,6 +5,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Controllers\WeatherForecastController.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <ProjectReference Include="..\IntecoAG.XafExt.Ecm.WebStore\IntecoAG.XafExt.Ecm.WebStore.csproj" />
       <ProjectReference Include="..\IntecoAG.XafExt.Ecm\IntecoAG.XafExt.Ecm.csproj" />
     </ItemGroup>

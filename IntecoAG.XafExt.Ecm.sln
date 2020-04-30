@@ -1,12 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntecoAG.XafExt.Ecm", "IntecoAG.XafExt.Ecm\IntecoAG.XafExt.Ecm.csproj", "{7F5E8CDB-5210-44C1-992D-3BE1DD03BB95}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntecoAG.XafExt.Ecm", "IntecoAG.XafExt.Ecm\IntecoAG.XafExt.Ecm.csproj", "{7F5E8CDB-5210-44C1-992D-3BE1DD03BB95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntecoAG.XafExt.Ecm.Tests", "IntecoAG.XafExt.Ecm.Tests\IntecoAG.XafExt.Ecm.Tests.csproj", "{A3A44F89-8ADD-4E18-AD0A-C1A7DF2D9927}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntecoAG.XafExt.Ecm.Tests", "IntecoAG.XafExt.Ecm.Tests\IntecoAG.XafExt.Ecm.Tests.csproj", "{A3A44F89-8ADD-4E18-AD0A-C1A7DF2D9927}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntecoAG.XafExt.Ecm.WebStore", "IntecoAG.XafExt.Ecm.WebStore\IntecoAG.XafExt.Ecm.WebStore.csproj", "{B1F96274-381C-48B0-B4D8-A1499018170D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntecoAG.XafExt.Ecm.WebStore", "IntecoAG.XafExt.Ecm.WebStore\IntecoAG.XafExt.Ecm.WebStore.csproj", "{B1F96274-381C-48B0-B4D8-A1499018170D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntecoAG.XafExt.Ecm.WebStoreService", "IntecoAG.XafExt.Ecm.WebStoreService\IntecoAG.XafExt.Ecm.WebStoreService.csproj", "{8F5B10FF-E102-4E52-99BB-B3B916E562E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntecoAG.XafExt.Ecm.WebStoreService", "IntecoAG.XafExt.Ecm.WebStoreService\IntecoAG.XafExt.Ecm.WebStoreService.csproj", "{8F5B10FF-E102-4E52-99BB-B3B916E562E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientApp", "ClientApp\ClientApp.csproj", "{35AE082A-57F2-4947-86A5-CF3FE267C814}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,5 +35,15 @@ Global
 		{8F5B10FF-E102-4E52-99BB-B3B916E562E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F5B10FF-E102-4E52-99BB-B3B916E562E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F5B10FF-E102-4E52-99BB-B3B916E562E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35AE082A-57F2-4947-86A5-CF3FE267C814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35AE082A-57F2-4947-86A5-CF3FE267C814}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35AE082A-57F2-4947-86A5-CF3FE267C814}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35AE082A-57F2-4947-86A5-CF3FE267C814}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {16D4DC53-803E-4DD1-A75C-C3881F880022}
 	EndGlobalSection
 EndGlobal
