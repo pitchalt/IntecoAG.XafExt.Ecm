@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleClientApp
+namespace IntecoAG.XafExt.Ecm.WebStore
 {
-    public class ApiException:IRequestResult
+    public class ApiResult:IRequestResult
     {
         public  String Message { get; set; }
     }

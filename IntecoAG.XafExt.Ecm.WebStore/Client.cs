@@ -4,6 +4,9 @@
 // </auto-generated>
 //----------------------
 
+using System.IO;
+using System.Net.Http;
+
 
 #pragma warning disable 108 // Disable "CS0108 '{derivedDto}.ToJson()' hides inherited member '{dtoBase}.ToJson()'. Use the new keyword if hiding was intended."
 #pragma warning disable 114 // Disable "CS0114 '{derivedDto}.RaisePropertyChanged(String)' hides inherited member 'dtoBase.RaisePropertyChanged(String)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword."
@@ -92,7 +95,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         ProcessResponse(client_, response_);
 
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200")
+                        if (status_ == "201")
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<DocDTO>(response_, headers_).ConfigureAwait(false);
 
@@ -102,7 +105,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            return new MyApiException() { Message = "Плохой запрос" };
+                            return new ApiResult() { Message = "Плохой запрос" };
                             //throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
 
@@ -192,15 +195,15 @@ namespace IntecoAG.XafExt.Ecm.WebStore
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task Store3Async(System.Guid id)
+        public System.Threading.Tasks.Task<IRequestResult> GetDocument(System.Guid id)
         {
-            return Store3Async(id, System.Threading.CancellationToken.None);
+            return GetDocument(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task Store3Async(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<IRequestResult> GetDocument(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -236,14 +239,18 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         var status_ = ((int)response_.StatusCode).ToString();
                         if (status_ == "200")
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<DocDTO>(response_, headers_).ConfigureAwait(false);
+
+                            return objectResponse_.Object;
                         }
                         else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                            return new ApiResult() { Message = "Плохой запрос" };
+                            // throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
+                        return new ApiResult() { Message = "Сервер говорит: " + status_ };
                     }
                     finally
                     {
@@ -259,15 +266,15 @@ namespace IntecoAG.XafExt.Ecm.WebStore
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task ContentAsync(System.Guid id)
+        public System.Threading.Tasks.Task GetContent(System.Guid id)
         {
-            return ContentAsync(id, System.Threading.CancellationToken.None);
+            return GetContent(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task ContentAsync(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task GetContent(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -289,6 +296,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                     PrepareRequest(client_, request_, url_);
 
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    //response_.Content
                     try
                     {
                         var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
@@ -326,15 +334,15 @@ namespace IntecoAG.XafExt.Ecm.WebStore
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task Content2Async(System.Guid id)
+        public System.Threading.Tasks.Task<IRequestResult> Put(System.Guid id, Stream content)
         {
-            return Content2Async(id, System.Threading.CancellationToken.None);
+            return Put(id, content, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task Content2Async(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<IRequestResult> Put(System.Guid id, Stream content, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -350,6 +358,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                 {
                     request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
+                    request_.Content = new StreamContent(content);
 
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
@@ -371,15 +380,19 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         var status_ = ((int)response_.StatusCode).ToString();
                         if (status_ == "200")
                         {
-                            return;
+                            return new ApiResult() { Message = "OK" };
                         }
                         else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                            return new ApiResult() { Message = "Плохой запрос" };
+                            // throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
+
+                        return new ApiResult() { Message = "Сервер ответил: " + status_ };
                     }
+
                     finally
                     {
                         if (response_ != null)

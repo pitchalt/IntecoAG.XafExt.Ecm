@@ -14,7 +14,7 @@ namespace ClientApp
             var client = new Client(baseUrl, httpClient);
             System.IO.Stream body = new MemoryStream();
             //var createdDoc = client.RootAsync("a1", (int?)10, body);
-            var createdDoc = client.Post();
+            var createdDoc = client.Post(null);
             createdDoc.Wait();
             Console.WriteLine("Hello World!");
             Console.ReadKey();
