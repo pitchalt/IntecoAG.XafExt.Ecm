@@ -24,14 +24,20 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         }
         private readonly ILogger<StoreController> _logger;
         [HttpPost]
-        //[Route("{post}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<DocDTO>> Post(DocDTO document)
         {
             if (document is null)
             {
                 return BadRequest();
             }
-            return new DocDTO() {Id = Guid.NewGuid()};
+
+            var r = new DocDTO() {Id = Guid.NewGuid()};
+          var uri=  this.Url.RouteUrl(this.RouteData);
+
+            return Created(uri,r);
             //Document doc = new Document();
             //doc.Name = Guid.NewGuid().ToString();
             //Response.StatusCode = 201;
@@ -42,6 +48,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 
         [HttpPost]
         [Route("{id}")]
+        [Produces("application/json")]
         public async Task<ActionResult> Post(Guid id, DocDTO document)
         {
             //Принимает минимальное количество парметров в документе, колдует и позвращает докуменент
@@ -56,7 +63,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         
         [HttpGet]
         [Route("{id}/content")]
-        public async Task<ActionResult> GetContent(Guid id)
+        [Produces("application/json")]
+        public async Task<ActionResult<DocDTO>> GetContent(Guid id)
         {
             //Возращает либо пдф, либо ошибку
             return Ok();
@@ -82,7 +90,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult> GetDocument(Guid id)
+        [Produces("application/json")]
+        public async Task<ActionResult<DocDTO>> GetDocument(Guid id)
         {
 
             return Ok();
@@ -90,8 +99,10 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 
         [HttpPut]
         [Route("{id}/content")]
+        [Produces("application/pdf")]
         public async Task<ActionResult> Put(Guid id)
         {
+            //метод найдет хранимый документ и привяжет к нему содержимое. вернёт ОК или ошибку
             return Ok();
             //var path = StoreLogic.GetFullName($"{id}.pdf");
             //if (System.IO.File.Exists(path))
