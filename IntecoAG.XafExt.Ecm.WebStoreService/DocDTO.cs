@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
 
-namespace WebApplication1.Controllers
+namespace IntecoAG.XafExt.Ecm.WebStoreService
 {
     public class DocDTO
     {
@@ -13,7 +13,7 @@ namespace WebApplication1.Controllers
         //public Dictionary<String, string> Properties { get; set; }
         public string FileName { get; set; }
         public String DocContentType { get; set; }
-        public long Id { get; set; }
+        public Guid Id { get; set; }
         //public string[] properties { get; set; }
         public String cmisaction { get; set; }
     }
