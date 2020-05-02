@@ -102,7 +102,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            return new MyApiException() { Message = "Плохой запрос" };
+                            return new ApiResult() { Message = "Плохой запрос" };
                             //throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
 

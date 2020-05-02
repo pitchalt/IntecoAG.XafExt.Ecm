@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.CodeAnalysis;
 
-namespace IntecoAG.XafExt.Ecm.WebStoreService
+namespace IntecoAG.XafExt.Ecm.WebStoreService.Models
 {
     public class DocDTO
     {

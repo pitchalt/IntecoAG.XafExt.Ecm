@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ConsoleClientApp
+namespace IntecoAG.XafExt.Ecm.WebStore
 {
     public interface IRequestResult
     {
