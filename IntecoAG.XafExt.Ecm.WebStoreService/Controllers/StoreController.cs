@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using IntecoAG.XafExt.Ecm.WebStoreService.Logic;
-using IntecoAG.XafExt.Ecm.WebStoreService.Models;
+using IntecoAG.XafExt.Ecm.WebStoreService.Messages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,19 +25,19 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         private readonly ILogger<StoreController> _logger;
         [HttpPost]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         public async Task<ActionResult<DocDTO>> Post(DocDTO document)
         {
             if (document is null)
             {
                 return BadRequest();
             }
+            document.Id = Guid.NewGuid();
+            //var r = new DocDTO() {Id = Guid.NewGuid()};
+            var uri = this.Url.RouteUrl(this.RouteData);
 
-            var r = new DocDTO() {Id = Guid.NewGuid()};
-          var uri=  this.Url.RouteUrl(this.RouteData);
-
-            return Created(uri,r);
+            return Created(uri, document);
             //Document doc = new Document();
             //doc.Name = Guid.NewGuid().ToString();
             //Response.StatusCode = 201;
@@ -63,55 +63,56 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         
         [HttpGet]
         [Route("{id}/content")]
-        [Produces("application/json")]
-        public async Task<ActionResult<DocDTO>> GetContent(Guid id)
+        [Produces("application/pdf")]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
+
+        public async Task<ActionResult> GetContent(Guid id)
         {
             //Возращает либо пдф, либо ошибку
-            return Ok();
+            //return Ok();
             //if (String.IsNullOrEmpty(id)) return new NoContentResult();
-            //var path = StoreLogic.GetFullName($"{id}.pdf");
-            //if (System.IO.File.Exists(path))
-            //{
-            //    //ViewBag.Path = path;
-            //    FileStream stream = null;
-            //    try
-            //    {
-
-            //        stream = new FileStream(path, FileMode.Open);
-            //        return new FileStreamResult(stream, "application/pdf");
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        stream?.Dispose();
-            //    }
-            //}
-            //return new NoContentResult();
+            var path = StoreLogic.GetFullName($"{id}.pdf");
+            if (System.IO.File.Exists(path))
+            {
+                FileStream stream = null;
+                stream = new FileStream(path, FileMode.Open);
+                return new FileStreamResult(stream, "application/pdf");
+            }
+            return new NoContentResult();
         }
 
         [HttpGet]
         [Route("{id}")]
         [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
+
         public async Task<ActionResult<DocDTO>> GetDocument(Guid id)
         {
-
-            return Ok();
+            var path = StoreLogic.GetFullName($"{id}.pdf");
+            if (!System.IO.File.Exists(path))
+            {
+                return new NotFoundResult();
+            }
+                return Ok();
         }
 
         [HttpPut]
         [Route("{id}/content")]
-        [Produces("application/pdf")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
         public async Task<ActionResult> Put(Guid id)
         {
             //метод найдет хранимый документ и привяжет к нему содержимое. вернёт ОК или ошибку
-            return Ok();
-            //var path = StoreLogic.GetFullName($"{id}.pdf");
-            //if (System.IO.File.Exists(path))
-            //{
-            //    using(FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open){
-            //        await Request.Body.CopyToAsync(stream);
-            //    }
-            //}
-            //return new BadRequestResult();
+            //return Ok();
+            var path = StoreLogic.GetFullName($"{id}.pdf");
+            if (System.IO.File.Exists(path))
+            {
+                using (FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open){
+                    await Request.Body.CopyToAsync(stream);
+                }
+            }
+            return new NotFoundResult();
         }
     }
 }
