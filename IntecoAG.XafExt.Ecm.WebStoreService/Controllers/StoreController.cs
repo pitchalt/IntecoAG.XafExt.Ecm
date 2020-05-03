@@ -27,7 +27,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
-        public async Task<ActionResult<DocDTO>> Post(DocDTO document)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
+        public async Task<ActionResult> Post(DocDTO document)
         {
             if (document is null)
             {
@@ -49,6 +50,9 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [HttpPost]
         [Route("{id}")]
         [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         public async Task<ActionResult> Post(Guid id, DocDTO document)
         {
             //Принимает минимальное количество парметров в документе, колдует и позвращает докуменент
@@ -60,12 +64,16 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             //Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(doc.Name));
             return Ok();
         }
-        
+
+      
         [HttpGet]
         [Route("{id}/content")]
-        [Produces("application/pdf")]
+  
+        [Produces("application/pdf", "application/json")]
+     
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
-
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         public async Task<ActionResult> GetContent(Guid id)
         {
             //Возращает либо пдф, либо ошибку
@@ -78,16 +86,18 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
                 stream = new FileStream(path, FileMode.Open);
                 return new FileStreamResult(stream, "application/pdf");
             }
-            return new NoContentResult();
+
+            return NotFound();
         }
 
         [HttpGet]
         [Route("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
 
-        public async Task<ActionResult<DocDTO>> GetDocument(Guid id)
+        public async Task<ActionResult> GetDocument(Guid id)
         {
             var path = StoreLogic.GetFullName($"{id}.pdf");
             if (!System.IO.File.Exists(path))
@@ -101,6 +111,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [Route("{id}/content")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         public async Task<ActionResult> Put(Guid id)
         {
             //метод найдет хранимый документ и привяжет к нему содержимое. вернёт ОК или ошибку

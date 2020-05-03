@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace IntecoAG.XafExt.Ecm.WebStoreService.Messages
 {
-    public class NotFoundDTO:ErrorDTO
+    public class ServerErrorDTO: ErrorDTO
     {
-        public NotFoundDTO()
+        public ServerErrorDTO()
         {
-            Reason = "Объект не найден";
-            CodeResult = "404";
+            Reason = "Ошибка сервера";
+            CodeResult = "500";
         }
     }
 }

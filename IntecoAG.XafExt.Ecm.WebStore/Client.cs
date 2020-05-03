@@ -7,7 +7,6 @@
 using System.IO;
 using System.Net.Http;
 
-
 #pragma warning disable 108 // Disable "CS0108 '{derivedDto}.ToJson()' hides inherited member '{dtoBase}.ToJson()'. Use the new keyword if hiding was intended."
 #pragma warning disable 114 // Disable "CS0114 '{derivedDto}.RaisePropertyChanged(String)' hides inherited member 'dtoBase.RaisePropertyChanged(String)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword."
 #pragma warning disable 472 // Disable "CS0472 The result of the expression is always 'false' since a value of type 'Int32' is never equal to 'null' of type 'Int32?'
@@ -53,7 +52,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<IRequestResult> Post(DocDTO body)
+        public System.Threading.Tasks.Task<DocDTO> Post(DocDTO body)
         {
             return Post(body, System.Threading.CancellationToken.None);
         }
@@ -61,7 +60,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<IRequestResult> Post(DocDTO body, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<DocDTO> Post(DocDTO body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/Store");
@@ -75,7 +74,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
-                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
@@ -98,15 +97,25 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         if (status_ == "201")
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<DocDTO>(response_, headers_).ConfigureAwait(false);
-
                             return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == "400")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<BadRequestDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<BadRequestDTO>("Bad Request", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "500")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ServerErrorDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<ServerErrorDTO>("Server Error", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            return new ApiResult() { Message = "Плохой запрос" };
-                            //throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
 
                         return default(DocDTO);
@@ -122,18 +131,17 @@ namespace IntecoAG.XafExt.Ecm.WebStore
             {
             }
         }
-
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task Store2Async(System.Guid id, DocDTO body)
+        public System.Threading.Tasks.Task<DocDTO> Post(System.Guid id, DocDTO body)
         {
-            return Store2Async(id, body, System.Threading.CancellationToken.None);
+            return Post(id, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task Store2Async(System.Guid id, DocDTO body, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<DocDTO> Post(System.Guid id, DocDTO body, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -151,6 +159,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
                     var url_ = urlBuilder_.ToString();
@@ -172,7 +181,20 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         var status_ = ((int)response_.StatusCode).ToString();
                         if (status_ == "200")
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<DocDTO>(response_, headers_).ConfigureAwait(false);
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == "500")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ServerErrorDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<ServerErrorDTO>("Server Error", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "400")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<BadRequestDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<BadRequestDTO>("Bad Request", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -180,6 +202,8 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
                             throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
+
+                        return default(DocDTO);
                     }
                     finally
                     {
@@ -193,17 +217,15 @@ namespace IntecoAG.XafExt.Ecm.WebStore
             }
         }
 
-        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<IRequestResult> GetDocument(System.Guid id)
+        public System.Threading.Tasks.Task GetDocument(System.Guid id)
         {
             return GetDocument(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<IRequestResult> GetDocument(System.Guid id, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task GetDocument(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -237,20 +259,29 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         ProcessResponse(client_, response_);
 
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200")
+                        if (status_ == "400")
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<DocDTO>(response_, headers_).ConfigureAwait(false);
-
-                            return objectResponse_.Object;
+                            var objectResponse_ = await ReadObjectResponseAsync<BadRequestDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<BadRequestDTO>("Bad Request", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "404")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<NotFoundDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<NotFoundDTO>("Not Found", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "500")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ServerErrorDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<ServerErrorDTO>("Server Error", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            return new ApiResult() { Message = "Плохой запрос" };
-                            // throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
-                        return new ApiResult() { Message = "Сервер говорит: " + status_ };
                     }
                     finally
                     {
@@ -264,7 +295,6 @@ namespace IntecoAG.XafExt.Ecm.WebStore
             }
         }
 
-        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public System.Threading.Tasks.Task GetContent(System.Guid id)
         {
@@ -272,7 +302,6 @@ namespace IntecoAG.XafExt.Ecm.WebStore
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
         public async System.Threading.Tasks.Task GetContent(System.Guid id, System.Threading.CancellationToken cancellationToken)
         {
@@ -296,7 +325,6 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                     PrepareRequest(client_, request_, url_);
 
                     var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    //response_.Content
                     try
                     {
                         var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
@@ -309,9 +337,22 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         ProcessResponse(client_, response_);
 
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200")
+                        if (status_ == "404")
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<NotFoundDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<NotFoundDTO>("Not Found", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "500")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ServerErrorDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<ServerErrorDTO>("Server Error", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "400")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<BadRequestDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<BadRequestDTO>("Bad Request", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
@@ -332,17 +373,15 @@ namespace IntecoAG.XafExt.Ecm.WebStore
             }
         }
 
-        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<IRequestResult> Put(System.Guid id, Stream content)
+        public System.Threading.Tasks.Task Put(System.Guid id, Stream content)
         {
             return Put(id, content, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<IRequestResult> Put(System.Guid id, Stream content, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task Put(System.Guid id, Stream content, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -356,7 +395,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
+                    //request_.Content = new System.Net.Http.StringContent(string.Empty, System.Text.Encoding.UTF8, "application/json");
                     request_.Method = new System.Net.Http.HttpMethod("PUT");
                     request_.Content = new StreamContent(content);
 
@@ -378,21 +417,30 @@ namespace IntecoAG.XafExt.Ecm.WebStore
                         ProcessResponse(client_, response_);
 
                         var status_ = ((int)response_.StatusCode).ToString();
-                        if (status_ == "200")
+                        if (status_ == "404")
                         {
-                            return new ApiResult() { Message = "OK" };
+                            var objectResponse_ = await ReadObjectResponseAsync<NotFoundDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<NotFoundDTO>("Not Found", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "500")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ServerErrorDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<ServerErrorDTO>("Server Error", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
+                        if (status_ == "400")
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<BadRequestDTO>(response_, headers_).ConfigureAwait(false);
+                            throw new ApiException<BadRequestDTO>("Bad Request", (int)response_.StatusCode, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ != "200" && status_ != "204")
                         {
                             var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            return new ApiResult() { Message = "Плохой запрос" };
-                            // throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + (int)response_.StatusCode + ").", (int)response_.StatusCode, responseData_, headers_, null);
                         }
-
-                        return new ApiResult() { Message = "Сервер ответил: " + status_ };
                     }
-
                     finally
                     {
                         if (response_ != null)
@@ -502,7 +550,7 @@ namespace IntecoAG.XafExt.Ecm.WebStore
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.11.0 (Newtonsoft.Json v11.0.0.0)")]
-    public partial class DocDTO : IRequestResult
+    public partial class DocDTO
     {
         [Newtonsoft.Json.JsonProperty("fileName", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string FileName { get; set; }
@@ -515,6 +563,42 @@ namespace IntecoAG.XafExt.Ecm.WebStore
 
         [Newtonsoft.Json.JsonProperty("cmisaction", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Cmisaction { get; set; }
+
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.11.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class BadRequestDTO
+    {
+        [Newtonsoft.Json.JsonProperty("reason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Reason { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("codeResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CodeResult { get; set; }
+
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.11.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class ServerErrorDTO
+    {
+        [Newtonsoft.Json.JsonProperty("reason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Reason { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("codeResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CodeResult { get; set; }
+
+
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "10.1.11.0 (Newtonsoft.Json v11.0.0.0)")]
+    public partial class NotFoundDTO
+    {
+        [Newtonsoft.Json.JsonProperty("reason", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Reason { get; set; }
+
+        [Newtonsoft.Json.JsonProperty("codeResult", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string CodeResult { get; set; }
 
 
     }
