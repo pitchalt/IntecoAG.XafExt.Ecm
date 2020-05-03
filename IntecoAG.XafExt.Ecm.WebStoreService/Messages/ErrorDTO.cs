@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IntecoAG.XafExt.Ecm.WebStoreService.Messeges
+namespace IntecoAG.XafExt.Ecm.WebStoreService.Messages
 {
     public class ErrorDTO
     {

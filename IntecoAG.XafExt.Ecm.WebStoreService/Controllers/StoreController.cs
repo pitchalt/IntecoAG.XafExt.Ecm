@@ -108,7 +108,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             var path = StoreLogic.GetFullName($"{id}.pdf");
             if (System.IO.File.Exists(path))
             {
-                using (FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open){
+                using (FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open))
+                {
                     await Request.Body.CopyToAsync(stream);
                 }
             }
