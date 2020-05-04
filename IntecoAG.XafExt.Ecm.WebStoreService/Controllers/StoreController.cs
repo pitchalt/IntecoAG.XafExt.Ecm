@@ -78,7 +78,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
                 stream = new FileStream(path, FileMode.Open);
                 return new FileStreamResult(stream, "application/pdf");
             }
-            return new NoContentResult();
+            
+            return new NotFoundResult();
         }
 
         [HttpGet]
