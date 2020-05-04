@@ -9,14 +9,26 @@ namespace ClientApp
     {
         static void Main(string[] args)
         {
-            string baseUrl = "https://localhost:5001";
+            string baseUrl = "https://localhost:44358";
             System.Net.Http.HttpClient httpClient = new HttpClient();
+
             var client = new Client(baseUrl, httpClient);
-            System.IO.Stream body = new MemoryStream();
-            //var createdDoc = client.RootAsync("a1", (int?)10, body);
-            var createdDoc = client.Post(null);
+            FileStream content = new FileStream(@"C:\Projects\data.txt", FileMode.Open);
+
+            var doc = new DocDTO() { Cmisaction = "create" };
+
+            //var createdDoc = client.Post(doc);
+            //createdDoc.Result;
+
+
+            var createdDoc = client.Post(Guid.NewGuid(), doc);
+            //var contentDoc = client.GetContent(Guid.NewGuid());
+            //var result = client.GetDocument(Guid.NewGuid());
+            //result.Wait();
+
+            var result = client.Put(Guid.NewGuid(), content);
+            result.Wait();
             createdDoc.Wait();
-            Console.WriteLine("Hello World!");
             Console.ReadKey();
         }
     }
