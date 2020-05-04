@@ -10,7 +10,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DbStore" />
       <Folder Include="FileStore" />
     </ItemGroup>
 

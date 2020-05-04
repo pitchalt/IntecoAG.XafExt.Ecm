@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 using DevExpress.Xpo;
 
@@ -11,7 +12,8 @@ namespace IntecoAG.XafExt.Ecm {
     [NonPersistent]
     public abstract class EcmObject : XPObject {
 
-        public abstract EcmRepository Repository { get; }
+        [Browsable(false)]
+        public abstract EcmRepository RepositoryCore { get; }
 
         private String _ObjectId;
         public String ObjectId {
