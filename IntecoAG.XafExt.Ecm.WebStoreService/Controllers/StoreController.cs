@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using TestAPI.Models;
 using System.IO;
+using DevExpress.ExpressApp;
 
 namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 {
@@ -18,8 +19,10 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
     [Route("[controller]")]
     public class StoreController : ControllerBase
     {
-        public StoreController(ILogger<StoreController> logger)
+        public readonly IObjectSpace ObjectSpace;
+        public StoreController(ILogger<StoreController> logger, IObjectSpace objectSpace)
         {
+            ObjectSpace = objectSpace;
             _logger = logger;
         }
         private readonly ILogger<StoreController> _logger;

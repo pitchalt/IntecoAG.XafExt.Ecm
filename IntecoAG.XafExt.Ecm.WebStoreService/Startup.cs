@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using DevExpress.ExpressApp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using TestAPI.Models;
 
 namespace IntecoAG.XafExt.Ecm.WebStoreService {
 
@@ -31,6 +32,12 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService {
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStoreAPI", Version = "v1" });
             });
+
+            
+            services.Add(new ServiceDescriptor(typeof(IObjectSpace), s => {
+                    ServiceXPObjectSpaceProvider provider = new ServiceXPObjectSpaceProvider(Configuration.GetConnectionString("PostgresConnnectionString"));
+                    return provider.GetService(typeof(IObjectSpace));
+            }, ServiceLifetime.Scoped));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
