@@ -37,7 +37,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         {
             if (document is null)
             {
-                return BadRequest();
+                return new ObjectResult(new BadRequestDTO());
             }
             //document.Id = Guid.NewGuid();
             var doc = ObjectSpace.CreateObject<EcmDocument>();
@@ -71,7 +71,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             //Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(doc.Name));
             if(document is null)
             {
-                return BadRequest();
+                return new ObjectResult(new BadRequestDTO());
             }
             var doc = ObjectSpace.CreateObject<EcmDocument>();
             doc.ObjectId = id.ToString();
@@ -104,7 +104,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
                 return new FileStreamResult(stream, "application/pdf");
             }
 
-            return NotFound();
+            return new ObjectResult(new NotFoundDTO());
         }
 
         [HttpGet]
