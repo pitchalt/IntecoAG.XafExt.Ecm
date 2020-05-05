@@ -42,8 +42,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             var doc = ObjectSpace.CreateObject<EcmDocument>();
             doc.ObjectId = Guid.NewGuid().ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
-
-            return Created(uri, doc);
+            ObjectSpace.CommitChanges();
+            return Created(uri, document);
             //Document doc = new Document();
             //doc.Name = Guid.NewGuid().ToString();
             //Response.StatusCode = 201;
