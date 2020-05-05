@@ -74,7 +74,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             var doc = ObjectSpace.CreateObject<EcmDocument>();
             doc.ObjectId = id.ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
-            return Created(uri, doc);
+            return Created(uri, document);
             //return Ok();
         }
 

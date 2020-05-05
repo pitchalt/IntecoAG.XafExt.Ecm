@@ -17,7 +17,7 @@ namespace IntecoAG.XafExt.Ecm.Tests {
             return null;
         }
         
-        private void OnDatabaseVersionMismatch(object? sender, DatabaseVersionMismatchEventArgs e) {
+        private void OnDatabaseVersionMismatch(object sender, DatabaseVersionMismatchEventArgs e) {
             e.Updater.Update();
             e.Handled = true;
         }
