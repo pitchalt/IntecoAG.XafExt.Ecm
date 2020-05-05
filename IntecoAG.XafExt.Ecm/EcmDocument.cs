@@ -12,6 +12,7 @@ namespace IntecoAG.XafExt.Ecm
 
         
         public String FileName { get; set; }
+        public Boolean IsLoaded { get; set; }
         
         [Persistent(nameof(Size))]
         private Int32 _Size;

@@ -139,12 +139,22 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         {
             //метод найдет хранимый документ и привяжет к нему содержимое. вернёт ОК или ошибку
             //return Ok();
-            var path = StoreLogic.GetFullName($"{id}.pdf");
+            //
+            CriteriaOperator criteria = new BinaryOperator(nameof(EcmDocument.ObjectId), id.ToString());
+            var doc = ObjectSpace.FindObject<EcmDocument>(criteria);
+            if (!doc.IsLoaded)
+            {
+                var path = StoreLogic.GetFullName($"{id}.pdf");
                 using (FileStream stream = System.IO.File.Create(path))
                 {
                     await Request.Body.CopyToAsync(stream);
                 }
+
+                doc.IsLoaded = true;
+
                 return Ok();
+            }
+
             return new NotFoundResult();
         }
     }
