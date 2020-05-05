@@ -35,7 +35,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService {
 
             
             services.Add(new ServiceDescriptor(typeof(IObjectSpace), s => {
-                    ServiceXPObjectSpaceProvider provider = new ServiceXPObjectSpaceProvider(Configuration.GetConnectionString("PostgresConnnectionString"));
+                    ServiceXPObjectSpaceProvider provider = new ServiceXPObjectSpaceProvider(Configuration.GetConnectionString("ConnectionString"));
                     return provider.GetService(typeof(IObjectSpace));
             }, ServiceLifetime.Scoped));
         }
