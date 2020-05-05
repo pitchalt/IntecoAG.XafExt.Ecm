@@ -43,7 +43,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             var doc = ObjectSpace.CreateObject<EcmDocument>();
             doc.ObjectId = Guid.NewGuid().ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
-            StoreLogic.CreateFile(doc.ObjectId, "pdf");
+            //StoreLogic.CreateFile(doc.ObjectId, "pdf");
             ObjectSpace.CommitChanges();
             return Created(uri, document);
             //Document doc = new Document();
@@ -76,7 +76,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             var doc = ObjectSpace.CreateObject<EcmDocument>();
             doc.ObjectId = id.ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
-            StoreLogic.CreateFile(doc.ObjectId, "pdf");
+            //StoreLogic.CreateFile(doc.ObjectId, "pdf");
             ObjectSpace.CommitChanges();
             return Created(uri, document);
             //return Ok();
@@ -140,14 +140,11 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             //метод найдет хранимый документ и привяжет к нему содержимое. вернёт ОК или ошибку
             //return Ok();
             var path = StoreLogic.GetFullName($"{id}.pdf");
-            if (System.IO.File.Exists(path))
-            {
-                using (FileStream stream = System.IO.File.Open(path, System.IO.FileMode.Open))
+                using (FileStream stream = System.IO.File.Create(path))
                 {
                     await Request.Body.CopyToAsync(stream);
                 }
                 return Ok();
-            }
             return new NotFoundResult();
         }
     }
