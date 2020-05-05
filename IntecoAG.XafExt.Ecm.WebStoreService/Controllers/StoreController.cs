@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using IntecoAG.XafExt.Ecm.WebStoreService.Logic;
 using IntecoAG.XafExt.Ecm.WebStoreService.Messages;
@@ -38,7 +39,6 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
                 return BadRequest();
             }
             document.Id = Guid.NewGuid();
-            //var r = new DocDTO() {Id = Guid.NewGuid()};
             var uri = this.Url.RouteUrl(this.RouteData);
 
             return Created(uri, document);
@@ -65,7 +65,14 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             //Response.StatusCode = 201;
             //Response.ContentType = "application/json";
             //Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(doc.Name));
-            return Ok();
+            if(document is null)
+            {
+                return BadRequest();
+            }
+            document.Id = id;
+            var uri = this.Url.RouteUrl(this.RouteData);
+            return Created(uri, document);
+            //return Ok();
         }
 
       
@@ -102,12 +109,17 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 
         public async Task<ActionResult> GetDocument(Guid id)
         {
-            var path = StoreLogic.GetFullName($"{id}.pdf");
-            if (!System.IO.File.Exists(path))
-            {
-                return new NotFoundResult();
-            }
-                return Ok();
+            //var path = StoreLogic.GetFullName($"{id}.pdf");
+            //if (!System.IO.File.Exists(path))
+            //{
+            //    return new NotFoundResult();
+            //}
+            //var doc = ObjectSpace.GetObjectByKey<EcmDocument>(id);
+            var doc = ObjectSpace.CreateObject<EcmDocument>();
+            doc.ObjectId = Guid.NewGuid().ToString();
+            var json = JsonSerializer.Serialize<EcmDocument>(doc);
+            await Response.WriteAsync(json);
+            return Ok();
         }
 
         [HttpPut]
@@ -127,6 +139,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
                 {
                     await Request.Body.CopyToAsync(stream);
                 }
+                return Ok();
             }
             return new NotFoundResult();
         }
