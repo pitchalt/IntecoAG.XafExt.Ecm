@@ -41,9 +41,11 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             }
             //document.Id = Guid.NewGuid();
             var doc = ObjectSpace.CreateObject<EcmDocument>();
-            doc.ObjectId = Guid.NewGuid().ToString();
+            var guid = Guid.NewGuid();
+            doc.ObjectId = guid.ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
             //StoreLogic.CreateFile(doc.ObjectId, "pdf");
+            document.Id = guid;
             ObjectSpace.CommitChanges();
             return Created(uri, document);
             //Document doc = new Document();
@@ -87,7 +89,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [Route("{id}/content")]
   
         [Produces("application/pdf", "application/json")]
-     
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
@@ -110,6 +112,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [HttpGet]
         [Route("{id}")]
         [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
@@ -132,6 +135,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [HttpPut]
         [Route("{id}/content")]
         [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]

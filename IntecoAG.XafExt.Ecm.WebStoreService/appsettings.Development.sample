@@ -1,6 +1,6 @@
 {
   "ConnectionStrings": {
-    "ConnectionString": "XpoProvider=Postgres;Server=localhost;Database=WebServiceDB;User ID=postgres;password="
+    "ConnectionString": "XpoProvider=Postgres;Server=localhost;Database=WebServiceDB;User ID=postgres;password=123"
   },
     "Logging": {
     "LogLevel": {
