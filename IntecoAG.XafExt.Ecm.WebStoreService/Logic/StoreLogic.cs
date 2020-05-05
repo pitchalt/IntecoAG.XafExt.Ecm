@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,11 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Logic
         {
             var curr = GetDirection() + @"\" + fullName;
             return curr;
+        }
+
+        public static void CreateFile(String name, String extension)
+        {
+            File.Create($@"{GetDirection()}\{name}.{extension}");
         }
     }
 }

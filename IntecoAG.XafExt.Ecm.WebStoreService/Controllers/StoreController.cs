@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using TestAPI.Models;
 using System.IO;
 using DevExpress.ExpressApp;
+using DevExpress.Data.Filtering;
 
 namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 {
@@ -42,6 +43,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             var doc = ObjectSpace.CreateObject<EcmDocument>();
             doc.ObjectId = Guid.NewGuid().ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
+            StoreLogic.CreateFile(doc.ObjectId, "pdf");
             ObjectSpace.CommitChanges();
             return Created(uri, document);
             //Document doc = new Document();
@@ -74,6 +76,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             var doc = ObjectSpace.CreateObject<EcmDocument>();
             doc.ObjectId = id.ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
+            StoreLogic.CreateFile(doc.ObjectId, "pdf");
+            ObjectSpace.CommitChanges();
             return Created(uri, document);
             //return Ok();
         }
@@ -118,11 +122,11 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             //    return new NotFoundResult();
             //}
             //var doc = ObjectSpace.GetObjectByKey<EcmDocument>(id);
-            var doc = ObjectSpace.CreateObject<EcmDocument>();
-            doc.ObjectId = Guid.NewGuid().ToString();
-            var json = JsonSerializer.Serialize<EcmDocument>(doc);
-            await Response.WriteAsync(json);
-            return Ok();
+            CriteriaOperator criteria = new BinaryOperator(nameof(EcmDocument.ObjectId), id.ToString());
+            var doc = ObjectSpace.FindObject<EcmDocument>(criteria);
+            var docDTO = new DocDTO() { FileName = doc.ObjectId };
+            
+            return Ok(docDTO);
         }
 
         [HttpPut]
