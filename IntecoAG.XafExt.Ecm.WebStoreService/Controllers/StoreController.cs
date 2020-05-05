@@ -38,10 +38,12 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             {
                 return BadRequest();
             }
-            document.Id = Guid.NewGuid();
+            //document.Id = Guid.NewGuid();
+            var doc = ObjectSpace.CreateObject<EcmDocument>();
+            doc.ObjectId = Guid.NewGuid().ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
 
-            return Created(uri, document);
+            return Created(uri, doc);
             //Document doc = new Document();
             //doc.Name = Guid.NewGuid().ToString();
             //Response.StatusCode = 201;
@@ -69,9 +71,10 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             {
                 return BadRequest();
             }
-            document.Id = id;
+            var doc = ObjectSpace.CreateObject<EcmDocument>();
+            doc.ObjectId = id.ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
-            return Created(uri, document);
+            return Created(uri, doc);
             //return Ok();
         }
 
