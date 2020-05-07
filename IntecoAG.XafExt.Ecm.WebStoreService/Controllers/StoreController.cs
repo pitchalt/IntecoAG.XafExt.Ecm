@@ -14,6 +14,8 @@ using System.IO;
 using DevExpress.ExpressApp;
 using DevExpress.Data.Filtering;
 
+using IntecoAG.XafExt.Ecm.WebStoreService.Swagger;
+
 namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 {
     
@@ -33,7 +35,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
-        public async Task<ActionResult> Post(DocDTO document)
+        public async Task<ActionResult> DocumentCreate(DocDTO document)
         {
             if (document is null)
             {
@@ -62,7 +64,7 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
-        public async Task<ActionResult> Post(Guid id, DocDTO document)
+        public async Task<ActionResult> DocumentUpdate(Guid id, DocDTO document)
         {
             //Принимает минимальное количество парметров в документе, колдует и позвращает докуменент
 
@@ -85,15 +87,37 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         }
 
       
+
+        [HttpGet]
+        [Route("{id}")]
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
+        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
+
+        public async Task<ActionResult> DocumentGet(Guid id)
+        {
+            //var path = StoreLogic.GetFullName($"{id}.pdf");
+            //if (!System.IO.File.Exists(path))
+            //{
+            //    return new NotFoundResult();
+            //}
+            //var doc = ObjectSpace.GetObjectByKey<EcmDocument>(id);
+            CriteriaOperator criteria = new BinaryOperator(nameof(EcmDocument.ObjectId), id.ToString());
+            var doc = ObjectSpace.FindObject<EcmDocument>(criteria);
+            var docDTO = new DocDTO() { FileName = doc.ObjectId };
+            
+            return Ok(docDTO);
+        }
         [HttpGet]
         [Route("{id}/content")]
-  
-        [Produces("application/pdf", "application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
+        [ResponseBinaryContent(StatusCodes.Status200OK, "application/pdf")]
+//        [ProducesBinaryResponseType(StatusCodes.Status200OK, "application/pdf")]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
-        public async Task<ActionResult> GetContent(Guid id)
+        public async Task<ActionResult> ContentGet(Guid id)
         {
             //Возращает либо пдф, либо ошибку
             //return Ok();
@@ -109,37 +133,14 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             return new ObjectResult(new NotFoundDTO());
         }
 
-        [HttpGet]
-        [Route("{id}")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
-        [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
-
-        public async Task<ActionResult> GetDocument(Guid id)
-        {
-            //var path = StoreLogic.GetFullName($"{id}.pdf");
-            //if (!System.IO.File.Exists(path))
-            //{
-            //    return new NotFoundResult();
-            //}
-            //var doc = ObjectSpace.GetObjectByKey<EcmDocument>(id);
-            CriteriaOperator criteria = new BinaryOperator(nameof(EcmDocument.ObjectId), id.ToString());
-            var doc = ObjectSpace.FindObject<EcmDocument>(criteria);
-            var docDTO = new DocDTO() { FileName = doc.ObjectId };
-            
-            return Ok(docDTO);
-        }
-
         [HttpPut]
         [Route("{id}/content")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
+        [RequestBinaryContent("application/pdf")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(NotFoundDTO))]
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
-        public async Task<ActionResult> Put(Guid id)
+        public async Task<ActionResult> ContentSet(Guid id)
         {
             //метод найдет хранимый документ и привяжет к нему содержимое. вернёт ОК или ошибку
             //return Ok();

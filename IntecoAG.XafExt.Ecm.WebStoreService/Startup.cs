@@ -1,8 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using DevExpress.ExpressApp;
+
+using IntecoAG.XafExt.Ecm.WebStoreService.Swagger;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,11 +31,15 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService {
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             services.AddControllers();
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebStoreAPI", Version = "v1" });
+                c.OperationFilter<BinaryContentFilter>();
+                c.IncludeXmlComments(xmlPath);                
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FileStore API", Version = "v1" });
             });
 
             
