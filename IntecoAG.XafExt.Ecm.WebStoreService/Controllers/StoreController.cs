@@ -18,18 +18,33 @@ using IntecoAG.XafExt.Ecm.WebStoreService.Swagger;
 
 namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
 {
-    
+    /// <summary>
+    /// контролер создания/обновления/получения контента документа
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class StoreController : ControllerBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public readonly IObjectSpace ObjectSpace;
+        /// <summary>
+        /// открытый конструктор
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="objectSpace"></param>
         public StoreController(ILogger<StoreController> logger, IObjectSpace objectSpace)
         {
             ObjectSpace = objectSpace;
             _logger = logger;
         }
         private readonly ILogger<StoreController> _logger;
+        /// <summary>
+        /// Создает EcmDocument по данным документа
+        /// </summary>
+        /// <param name="document"></param>
+        /// <returns></returns>
         [HttpPost]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]
@@ -57,11 +72,16 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             //Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(doc.Name));
             //return Ok();
         }
-
+        /// <summary>
+        /// Обновляет EcmDocument по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="document"></param>
+        /// <returns></returns>
         [HttpPost]
         [Route("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]//201 вместо 200 чтобы убрать warning
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         public async Task<ActionResult> DocumentUpdate(Guid id, DocDTO document)
@@ -77,7 +97,8 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             {
                 return new ObjectResult(new BadRequestDTO());
             }
-            var doc = ObjectSpace.CreateObject<EcmDocument>();
+            CriteriaOperator criteria = new BinaryOperator(nameof(EcmDocument.ObjectId), id.ToString());
+            var doc = ObjectSpace.FindObject<EcmDocument>(criteria);
             doc.ObjectId = id.ToString();
             var uri = this.Url.RouteUrl(this.RouteData);
             //StoreLogic.CreateFile(doc.ObjectId, "pdf");
@@ -87,7 +108,11 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         }
 
       
-
+        /// <summary>
+        /// Возвращает документ по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id}")]
         [Produces("application/json")]
@@ -110,6 +135,11 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             
             return Ok(docDTO);
         }
+        /// <summary>
+        /// Возвращает контент файла по id/имя файла
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [Route("{id}/content")]
         [ResponseBinaryContent(StatusCodes.Status200OK, "application/pdf")]
@@ -133,6 +163,11 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             return new ObjectResult(new NotFoundDTO());
         }
 
+        /// <summary>
+        /// Создает и задает контент для файла(имя файла = id) 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPut]
         [Route("{id}/content")]
         [RequestBinaryContent("application/pdf")]
