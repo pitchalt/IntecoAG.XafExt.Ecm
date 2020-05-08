@@ -65,12 +65,6 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
             document.Id = guid;
             ObjectSpace.CommitChanges();
             return Created(uri, document);
-            //Document doc = new Document();
-            //doc.Name = Guid.NewGuid().ToString();
-            //Response.StatusCode = 201;
-            //Response.ContentType = "application/json";
-            //Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(doc.Name));
-            //return Ok();
         }
         /// <summary>
         /// Обновляет EcmDocument по id
@@ -81,30 +75,24 @@ namespace IntecoAG.XafExt.Ecm.WebStoreService.Controllers
         [HttpPost]
         [Route("{id}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(DocDTO))]//201 вместо 200 чтобы убрать warning
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(DocDTO))]//201 вместо 200 чтобы убрать warning
         [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = typeof(ServerErrorDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BadRequestDTO))]
         public async Task<ActionResult> DocumentUpdate(Guid id, DocDTO document)
         {
             //Принимает минимальное количество парметров в документе, колдует и позвращает докуменент
 
-            //Document doc = new Document();
-            //doc.Name = id;
-            //Response.StatusCode = 201;
-            //Response.ContentType = "application/json";
-            //Response.Body = new MemoryStream(Encoding.UTF8.GetBytes(doc.Name));
             if(document is null)
             {
                 return new ObjectResult(new BadRequestDTO());
             }
             CriteriaOperator criteria = new BinaryOperator(nameof(EcmDocument.ObjectId), id.ToString());
             var doc = ObjectSpace.FindObject<EcmDocument>(criteria);
-            doc.ObjectId = id.ToString();
-            var uri = this.Url.RouteUrl(this.RouteData);
+            doc.FileName = document.FileName;
+            //var uri = this.Url.RouteUrl(this.RouteData);
             //StoreLogic.CreateFile(doc.ObjectId, "pdf");
             ObjectSpace.CommitChanges();
-            return Created(uri, document);
-            //return Ok();
+            return Ok(document);
         }
 
       

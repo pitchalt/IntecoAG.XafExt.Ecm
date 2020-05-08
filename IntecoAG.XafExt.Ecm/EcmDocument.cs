@@ -10,9 +10,17 @@ namespace IntecoAG.XafExt.Ecm
     [Persistent("IagXafExtEcmDocument")]
     public class EcmDocument : EcmObject, IFileData {
 
-        
-        public String FileName { get; set; }
-        public Boolean IsLoaded { get; set; }
+        private String _FileName;
+        public String FileName {
+            get { return _FileName; }
+            set { SetPropertyValue(nameof(FileName), ref _FileName, value); } 
+        }
+
+        private Boolean _IsLoaded;
+        public Boolean IsLoaded {
+            get { return _IsLoaded; }
+            set { SetPropertyValue(nameof(IsLoaded), ref _IsLoaded, value); } 
+        }
         
         [Persistent(nameof(Size))]
         private Int32 _Size;
